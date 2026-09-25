@@ -169,7 +169,6 @@ function szm_ap_render_block( $content, $block ) {
 	}
 
 	// Class veilig samenvoegen: als er al class="..." staat, plakken we erachter.
-	if ( strpos ?? false ) {} // (no-op; placeholder vermeden)
 	if ( szm_ap_has_class_attr( $open ) ) {
 		$open = szm_ap_add_class( $open, 'szm-pos-absolute' );
 	} else {
