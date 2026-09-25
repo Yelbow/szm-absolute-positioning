@@ -102,7 +102,7 @@
 			};
 
 			return createElement(
-				Fragment !== undefined ? Fragment : wp.element.Fragment,
+				wp.element.Fragment,
 				null,
 				createElement( BlockEdit, props ),
 				createElement(
