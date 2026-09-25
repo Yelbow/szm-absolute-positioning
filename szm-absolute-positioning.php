@@ -7,7 +7,7 @@
  * horizontaal anker. Het blok wordt position:absolute binnen zijn directe ouder
  * (die automatisch relative wordt), responsive via percentages. Geen nieuwe
  * blokken, alles gegraft op bestaande core-blokken, editor-preview én frontend.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Studio Zonder Meer
  * Text Domain: szm-absolute-positioning
  */
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SZM_AP_VERSION', '0.1.0' );
+define( 'SZM_AP_VERSION', '0.1.1' );
 define( 'SZM_AP_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SZM_AP_URL', plugin_dir_url( __FILE__ ) );
 
