@@ -122,6 +122,40 @@
 				} )() );
 			};
 
+			// Bij het aanzetten: het blok staat nu nog in de normale flow, dus
+			// meet zijn huidige plek t.o.v. zijn ouder en zet die als startpunt
+			// (in procenten). Zonder dit springt het blok naar links:0%/top:0%
+			// (de hoek van de ouder) zodra er een schuif aangeraakt wordt, i.p.v.
+			// vanaf de huidige positie verder te schuiven.
+			var enableFromCurrentPosition = function ( v ) {
+				if ( ! v ) {
+					set( 'szmPos', v );
+					return;
+				}
+				var el = document.querySelector( '[data-block="' + props.clientId + '"]' );
+				var parentEl = el ? el.parentElement : null;
+				if ( ! el || ! parentEl ) {
+					set( 'szmPos', v );
+					return;
+				}
+				var elRect     = el.getBoundingClientRect();
+				var parentRect = parentEl.getBoundingClientRect();
+				if ( parentRect.width <= 0 || parentRect.height <= 0 ) {
+					set( 'szmPos', v );
+					return;
+				}
+				var xPct = Math.max( 0, Math.min( 100, ( ( elRect.left - parentRect.left ) / parentRect.width ) * 100 ) );
+				var yPct = Math.max( 0, Math.min( 100, ( ( elRect.top - parentRect.top ) / parentRect.height ) * 100 ) );
+				var wPct = Math.max( 5, Math.min( 100, ( elRect.width / parentRect.width ) * 100 ) );
+				props.setAttributes( {
+					szmPos:        true,
+					szmPosXAnchor: 'left',
+					szmPosX:       String( Math.round( xPct ) ),
+					szmPosY:       String( Math.round( yPct ) ),
+					szmPosWidth:   String( Math.round( wPct ) ),
+				} );
+			};
+
 			return createElement(
 				wp.element.Fragment,
 				null,
@@ -136,7 +170,7 @@
 							label: __( 'Zet dit blok op een absolute positie', 'szm-absolute-positioning' ),
 							help: __( 'Positioneert het blok binnen zijn directe ouder. Gebruik percentages zodat het responsive blijft.', 'szm-absolute-positioning' ),
 							checked: !! attrs.szmPos,
-							onChange: function ( v ) { set( 'szmPos', v ); },
+							onChange: enableFromCurrentPosition,
 						} ),
 						attrs.szmPos
 							? createElement( wp.element.Fragment, null,
