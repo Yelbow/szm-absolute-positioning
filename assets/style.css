@@ -1,0 +1,24 @@
+/*
+ * SZM Absolute Positioning — frontend CSS.
+ * Positionering zelf komt via inline style (render_block). Hier staan alleen
+ * de structurele regels die CSS moet doen (parent-relative, vangnet, raster-hint).
+ */
+
+/* Elke blok-container die direct een absoluut gepositioneerd kind heeft, wordt
+   het positioneer-kader (relative). :has() wordt breed ondersteund sinds 2023. */
+.wp-block:has( > .szm-pos-absolute ) {
+	position: relative;
+}
+
+/* Vangnet: de class forceert absolute, de inline style bepaalt de exacte plek. */
+.szm-pos-absolute {
+	position: absolute;
+	box-sizing: border-box;
+}
+
+/* Definieer ook de kolommen-als-parents, want een absolute kind in Columns kader
+   geldt t.o.v. de kolom zelf; met :has() is dat al gevat via .wp-block. Hier een
+   extra garantie voor blokken die geen .wp-block class hebben. */
+.block-editor-block-list__block:has( > .block-editor-block-list__block.szm-pos-absolute ) {
+	position: relative;
+}

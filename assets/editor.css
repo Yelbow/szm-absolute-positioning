@@ -1,0 +1,25 @@
+/*
+ * SZM Absolute Positioning — editor preview.
+ * In de site editor is het canvas een lijst-wrapper; de ouder position:relative
+ * zetten we via :has() net als op de frontend. Frontend blijft leidend; dit is
+ * alleen een redelijke preview + een zichtbare hint dat een blok gepositioneerd is.
+ */
+
+/* Ouder als kader in de editor. */
+.block-editor-block-list__block:has( > .block-editor-block-list__block.szm-pos-absolute ),
+.block-editor-block-list__block:has( > .szm-pos-absolute ) {
+	position: relative;
+}
+
+/* Zwakke overlay op het blok in de editor, zodat je ziet dat het absoluut staat
+   zonder dat het de vormgeving van de content verstoort. */
+.szm-pos-absolute {
+	position: absolute;
+	box-shadow: 0 0 0 1px rgba( 30, 30, 30, 0.15 );
+}
+
+/* Paneel-tip: laat in de editor zien waar het preview-blok als absoluut wordt
+   gezien (dotted kader). De echte layout is op de frontend. */
+.editor-styles-wrapper .szm-pos-absolute {
+	outline: 1px dashed rgba( 30, 30, 30, 0.5 );
+}
