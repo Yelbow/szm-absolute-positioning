@@ -2,6 +2,30 @@
 
 Failed approaches / gotchas / architecture choices, dated.
 
+## 2026-09-25
+
+- **Root cause of "doesn't work at all" report**: `szm-absolute-positioning.php:172`
+  had a leftover no-op placeholder `if ( strpos ?? false ) {}`. A bare identifier
+  without `()` is a constant reference in PHP; PHP 8 throws a fatal `Error` for an
+  undefined constant (not a warning like PHP 7). This crashed `szm_ap_render_block`
+  with a page-wide 500 on every page containing a block with `szmPos:true`, in both
+  wp-admin (block preview/post rendering) and the live frontend. Fixed by deleting
+  the dead line. Confirmed via a direct WP-CLI-created test post + curl: 500 before,
+  200 with correct inline style after.
+- **Second bug, same session**: `editor.js` never registered the `szmPos*`
+  attributes on the block type via a `blocks.registerBlockType` filter — it only
+  added `editor.BlockEdit` (inspector UI) and `editor.BlockListBlock` (preview)
+  filters. WordPress only serializes attributes that are registered on the block
+  type into the saved block comment, so even where the fatal error didn't hide it,
+  the position data would vanish on save/reload and never reach `render_block`.
+  Fixed by adding a `blocks.registerBlockType` filter that merges the `szmPos*`
+  attribute definitions in for supported blocks.
+- Both fixes deployed to fse-test's docker bind mount (`docker exec fse-test-wp`,
+  since the plugin dir is owned by uid 33/www-data inside that container, not the
+  wpcli container's uid 82). Frontend render verified live; the editor-side
+  save/reload round trip still needs a real browser check (no browser tool
+  available this session) — see PLAN.md.
+
 ## 2026-09-14
 
 - **Positionering opslaan als eigen attributen + `render_block`, niet in de core
