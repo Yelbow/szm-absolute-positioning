@@ -19,6 +19,27 @@
 		return SUPPORTED.indexOf( name ) !== -1;
 	}
 
+	// Zonder dit worden szmPos*-attributen nooit meegeserialiseerd naar de
+	// opgeslagen block-comment (WP serialiseert alleen geregistreerde
+	// attributen), dus verdwijnen ze bij save/reload en komen ze nooit in de
+	// frontend-markup terecht die render_block leest.
+	function addPositionAttributes( settingsArg, name ) {
+		if ( ! isSupported( name ) ) {
+			return settingsArg;
+		}
+		settingsArg.attributes = Object.assign( {}, settingsArg.attributes, {
+			szmPos:         { type: 'boolean', default: false },
+			szmPosX:        { type: 'string', default: '' },
+			szmPosY:        { type: 'string', default: '' },
+			szmPosWidth:    { type: 'string', default: '' },
+			szmPosZ:        { type: 'string', default: '' },
+			szmPosXAnchor:  { type: 'string', default: 'left' },
+		} );
+		return settingsArg;
+	}
+
+	addFilter( 'blocks.registerBlockType', 'szm/absolute-positioning/attributes', addPositionAttributes );
+
 	// Bouwt dezelfde inline style-string als de PHP-kant (render_block), zodat
 	// de editor-preview zo dicht mogelijk bij de frontend ligt.
 	function buildStyle( attrs ) {
